@@ -105,3 +105,9 @@ venv.bak/
 
 # corpus folder
 magicdata/
+
+# ipynb
+.ipynb_checkpoints/
+
+# vscode
+.vscode/
