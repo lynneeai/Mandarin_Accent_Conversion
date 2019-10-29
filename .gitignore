@@ -105,6 +105,8 @@ venv.bak/
 
 # corpus folder
 magicdata/
+aishell_1/
+aishell_2/
 
 # ipynb
 .ipynb_checkpoints/
