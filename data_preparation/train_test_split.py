@@ -11,12 +11,13 @@ CLASS_TRAIN_TEST_SPLIT_SEED = 77
 ENC_TRAIN_TEST_SPLIT_SEED = 777
 
 # output file names
-CLASS_TRAIN_FILE = f'{ROOT_DIR}/class_train.txt'
-CLASS_TEST_FILE = f'{ROOT_DIR}/class_test.txt'
-CLASS_DEV_FILE = f'{ROOT_DIR}/class_dev.txt'
-ENC_TRAIN_FILE = f'{ROOT_DIR}/enc_train.txt'
-ENC_TEST_FILE = f'{ROOT_DIR}/enc_test.txt'
-ENC_DEV_FILE = f'{ROOT_DIR}/enc_dev.txt'
+OUTPUT_FILE_ROOT = '../aishell_2_train_test_dev'
+CLASS_TRAIN_FILE = f'{OUTPUT_FILE_ROOT}/class_train.txt'
+CLASS_TEST_FILE = f'{OUTPUT_FILE_ROOT}/class_test.txt'
+CLASS_DEV_FILE = f'{OUTPUT_FILE_ROOT}/class_dev.txt'
+ENC_TRAIN_FILE = f'{OUTPUT_FILE_ROOT}/enc_train.txt'
+ENC_TEST_FILE = f'{OUTPUT_FILE_ROOT}/enc_test.txt'
+ENC_DEV_FILE = f'{OUTPUT_FILE_ROOT}/enc_dev.txt'
 
 '''--------------Helper Functions--------------'''
 '''
