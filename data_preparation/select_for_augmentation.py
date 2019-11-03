@@ -4,15 +4,12 @@ from train_test_split import random_k_items
 
 ROOT_DIR = '../aishell_2_partitions'
 CLASS_TRAIN_FILE = f'{ROOT_DIR}/class_train.txt'
-ENC_TRAIN_FILE = f'{ROOT_DIR}/enc_train.txt'
-CLASS_SELECTION_SEED = 123
-ENC_SELECTION_SEED = 321
+SELECTION_SEED = 123
 SELECTION_RATIO = 0.2
 DATA_ROOT_DIR = '../aishell_2/data/wav/augmented'
 
-# output files
+# output file
 CLASS_TRAIN_AUG = f'{ROOT_DIR}/class_train_aug.txt'
-ENC_TRAIN_AUG = f'{ROOT_DIR}/enc_train_aug.txt'
 
 def random_select_and_write(input_file, output_file, ratio, seed):
     total_list = []
@@ -26,9 +23,6 @@ def random_select_and_write(input_file, output_file, ratio, seed):
     selected_list = random_k_items(total_list, selected_len, seed)
     with open(output_file, 'w') as outfile:
         for wav, label in selected_list:
-            _, _, _, _, _, wav_name = wav.split('/')
-            new_wav = f'{DATA_ROOT_DIR}/{wav_name[:-4]}_aug.wav'
-            outfile.writelines(f'{new_wav}\t{label}\n')
+            outfile.writelines(f'{wav}\t{label}\n')
 
-random_select_and_write(CLASS_TRAIN_FILE, CLASS_TRAIN_AUG, SELECTION_RATIO, CLASS_SELECTION_SEED)
-random_select_and_write(ENC_TRAIN_FILE, ENC_TRAIN_AUG, SELECTION_RATIO, ENC_SELECTION_SEED)
+random_select_and_write(CLASS_TRAIN_FILE, CLASS_TRAIN_AUG, SELECTION_RATIO, SELECTION_SEED)
