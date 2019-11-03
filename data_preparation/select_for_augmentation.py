@@ -30,4 +30,5 @@ def random_select_and_write(input_file, output_file, ratio, seed):
             new_wav = f'{DATA_ROOT_DIR}/{wav_name[:-4]}_aug.wav'
             outfile.writelines(f'{new_wav}\t{label}\n')
 
+random_select_and_write(CLASS_TRAIN_FILE, CLASS_TRAIN_AUG, SELECTION_RATIO, CLASS_SELECTION_SEED)
 random_select_and_write(ENC_TRAIN_FILE, ENC_TRAIN_AUG, SELECTION_RATIO, ENC_SELECTION_SEED)
