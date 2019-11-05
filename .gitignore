@@ -115,4 +115,4 @@ aishell_2/
 .vscode/
 
 # local files
-.local_scripts/
+local_scripts/
