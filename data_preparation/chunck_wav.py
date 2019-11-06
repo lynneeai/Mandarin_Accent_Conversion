@@ -41,11 +41,11 @@ def chunck_wav(file_path, chunk_length_ms=1000):
 def chunck_wav_files(file_list_path, output_dir, output_file, chunk_length_ms=3000): # pydub calculates in millisec
     with open(file_list_path, 'r') as infile:
         with open(output_file, 'w') as outfile:
-            file_name = os.path.basename(file_path).split('.')[0]
             count = 0
             for line in infile:
                 count += 1
                 wav, label = line.strip().split()
+                file_name = os.path.basename(wav).split('.')[0]
                 chunks = chunck_wav(wav, chunk_length_ms)
                 for i, chunk in enumerate(chunks): # Export chunks as wav files
                     chunk_name = "{}{}_chunk{}.wav".format(output_dir, file_name ,i)
