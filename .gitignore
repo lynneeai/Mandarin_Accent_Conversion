@@ -113,3 +113,6 @@ aishell_2/
 
 # vscode
 .vscode/
+
+# local files
+local_scripts/
