@@ -61,4 +61,4 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     output_dir = sys.argv[2]
     output_file = sys.argv[3]
-    chunck_wav_files(file_path, output_dir, output_file, chunk_length_ms=1000)
+    chunck_wav_files(file_path, output_dir, output_file, chunk_length_ms=3581)
