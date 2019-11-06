@@ -1,0 +1,5 @@
+mean value: 3.5818879125000005
+min value: 0.896
+max value: 16.245
+80 percentile: 5.706593750000003
+90 percentile: 5.706593750000003
