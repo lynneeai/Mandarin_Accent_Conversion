@@ -4,6 +4,11 @@ export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/sph2pipe
 . $KALDI_ROOT/tools/config/common_path.sh
 export LC_ALL=C
 
+rm ./utils
+rm ./steps
+rm ./local
+rm ./sid
+
 ln -s $KALDI_ROOT/egs/voxceleb/v2/utils ./utils
 ln -s $KALDI_ROOT/egs/voxceleb/v2/steps ./steps
 ln -s $KALDI_ROOT/egs/voxceleb/v2/local ./local

@@ -35,17 +35,19 @@ if [ $stage -le 0 ]; then
 	utils/utt2spk_to_spk2utt.pl $data_dir/dev/utt2accent > $data_dir/dev/accent2utt
 fi
 
-# if [ $stage -le 1 ]; then
-# 	# Make MFCCs and compute the energy-based VAD for each dataset
-# 	for name in train voxceleb1_test; do
-# 		steps/make_mfcc.sh --write-utt2num-frames true --mfcc-config conf/mfcc.conf --nj 40 --cmd "$train_cmd" \
-# 			data/${name} exp/make_mfcc $mfccdir
-# 		utils/fix_data_dir.sh data/${name}
-# 		sid/compute_vad_decision.sh --nj 40 --cmd "$train_cmd" \
-# 			data/${name} exp/make_vad $vaddir
-# 		utils/fix_data_dir.sh data/${name}
-# 	done
-# fi
+if [ $stage -le 1 ]; then
+	utils/data/get_utt2num_frames.sh $data_dir/train
+
+	# # Make MFCCs and compute the energy-based VAD for each dataset
+	# for name in train voxceleb1_test; do
+	# 	steps/make_mfcc.sh --write-utt2num-frames true --mfcc-config conf/mfcc.conf --nj 40 --cmd "$train_cmd" \
+	# 		data/${name} exp/make_mfcc $mfccdir
+	# 	utils/fix_data_dir.sh data/${name}
+	# 	sid/compute_vad_decision.sh --nj 40 --cmd "$train_cmd" \
+	# 		data/${name} exp/make_vad $vaddir
+	# 	utils/fix_data_dir.sh data/${name}
+	# done
+fi
 
 # # In this section, we augment the VoxCeleb2 data with reverberation,
 # # noise, music, and babble, and combine it with the clean data.

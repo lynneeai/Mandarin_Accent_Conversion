@@ -8,7 +8,8 @@ def get_wav_scp(batch_file, output_dir):
 			for line in infile:
 				wav, _ = line.split()
 				wav_id = wav.split('/')[-1][:-4]
-				outfile.writelines(f'{wav_id}\t../../{wav}\n')
+				wav = f'~/Mandarin_Accent_Conversion/{wav[3:]}'
+				outfile.writelines(f'{wav_id}\t{wav}\n')
 
 def get_utt2accent(batch_file, output_dir):
 	output_file = f'{output_dir}/utt2accent'
