@@ -43,6 +43,7 @@ def random_aug(file_path, output_dir, n=3):
 		noise_factor = 0.005 + random.random()*(0.015-0.005)
 		#print(noise_factor)
 		data, sr = librosa.load(file_path) # data, sampling rate
+		print("sampling rate {}".format(sr))
 		aug_data = aug_speed(data)
 		aug_data = aug_loudness(aug_data)
 		aug_data = aug_noise(aug_data, noise_factor=noise_factor)
