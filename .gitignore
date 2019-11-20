@@ -107,6 +107,7 @@ venv.bak/
 magicdata/
 aishell_1/
 aishell_2/
+data/
 
 # ipynb
 .ipynb_checkpoints/
