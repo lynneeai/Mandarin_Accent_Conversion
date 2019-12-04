@@ -4,6 +4,9 @@ import pickle
 import h5py
 import random
 import multiprocessing as mp
+import pyworld as pw
+import numpy as np
+from tqdm import tqdm
 
 SR = 16000
 FFT_SIZE = 256
@@ -11,8 +14,8 @@ FRAME_PERIOD = 10
 DATA_ROOT = './data'
 PARTITION_FILE_ROOT = './aishell_2_partitions'
 PROCESS_NUM = 10
-BATCH_PERCENT = 1
-SUBSET_PERCENT = 1
+BATCH_PERCENT = 0.05
+SUBSET_PERCENT = 0.2
 SEED = 233
 
 def random_k_items(l, k, seed):
