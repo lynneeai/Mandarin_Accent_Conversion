@@ -16,7 +16,7 @@ vaddir=`pwd`/mfcc
 nnet_dir=exp/xvector_nnet_1a
 musan_root=/home/lynnee/musan
 
-stage=6
+stage=11
 
 if [ $stage -le 0 ]; then
 	# generate wav.scp, utt2accent, utt2spk
@@ -130,7 +130,7 @@ fi
 if [ $stage -le 5 ]; then
     # Now, we need to remove features that are too short after removing silence
     # frames.  We want atleast 5s (500 frames) per utterance.
-    min_len=300
+    min_len=350
     mv data/train_combined_no_sil/utt2num_frames data/train_combined_no_sil/utt2num_frames.bak
     awk -v min_len=${min_len} '$2 > min_len {print $1, $2}' data/train_combined_no_sil/utt2num_frames.bak > data/train_combined_no_sil/utt2num_frames
     utils/filter_scp.pl data/train_combined_no_sil/utt2num_frames data/train_combined_no_sil/utt2spk > data/train_combined_no_sil/utt2spk.new
@@ -157,46 +157,46 @@ local/nnet3/xvector/run_xvector.sh --stage $stage --train-stage -1 \
     --data data/train_combined_no_sil --nnet-dir $nnet_dir \
     --egs-dir $nnet_dir/egs
 
-# if [ $stage -le 9 ]; then
-#   # Extract x-vectors for centering, LDA, and PLDA training.
-#   sid/nnet3/xvector/extract_xvectors.sh --cmd "$train_cmd --mem 4G" --nj 80 \
-# 	$nnet_dir data/train \
-# 	$nnet_dir/xvectors_train
+if [ $stage -le 9 ]; then
+  # Extract x-vectors for centering, LDA, and PLDA training.
+  sid/nnet3/xvector/extract_xvectors.sh --cmd "$train_cmd --mem 4G" --nj 80 \
+	$nnet_dir data/train \
+	$nnet_dir/xvectors_train
 
-#   # Extract x-vectors used in the evaluation.
-#   sid/nnet3/xvector/extract_xvectors.sh --cmd "$train_cmd --mem 4G" --nj 40 \
-# 	$nnet_dir data/voxceleb1_test \
-# 	$nnet_dir/xvectors_voxceleb1_test
-# fi
+  # Extract x-vectors used in the evaluation.
+  sid/nnet3/xvector/extract_xvectors.sh --cmd "$train_cmd --mem 4G" --nj 40 \
+	$nnet_dir data/test \
+	$nnet_dir/xvectors_test
+fi
 
-# if [ $stage -le 10 ]; then
-#   # Compute the mean vector for centering the evaluation xvectors.
-#   $train_cmd $nnet_dir/xvectors_train/log/compute_mean.log \
-# 	ivector-mean scp:$nnet_dir/xvectors_train/xvector.scp \
-# 	$nnet_dir/xvectors_train/mean.vec || exit 1;
+if [ $stage -le 10 ]; then
+  # Compute the mean vector for centering the evaluation xvectors.
+  $train_cmd $nnet_dir/xvectors_train/log/compute_mean.log \
+	ivector-mean scp:$nnet_dir/xvectors_train/xvector.scp \
+	$nnet_dir/xvectors_train/mean.vec || exit 1;
 
-#   # This script uses LDA to decrease the dimensionality prior to PLDA.
-#   lda_dim=200
-#   $train_cmd $nnet_dir/xvectors_train/log/lda.log \
-# 	ivector-compute-lda --total-covariance-factor=0.0 --dim=$lda_dim \
-# 	"ark:ivector-subtract-global-mean scp:$nnet_dir/xvectors_train/xvector.scp ark:- |" \
-# 	ark:data/train/utt2spk $nnet_dir/xvectors_train/transform.mat || exit 1;
+  # This script uses LDA to decrease the dimensionality prior to PLDA.
+  lda_dim=200
+  $train_cmd $nnet_dir/xvectors_train/log/lda.log \
+	ivector-compute-lda --total-covariance-factor=0.0 --dim=$lda_dim \
+	"ark:ivector-subtract-global-mean scp:$nnet_dir/xvectors_train/xvector.scp ark:- |" \
+	ark:data/train/utt2accent $nnet_dir/xvectors_train/transform.mat || exit 1;
 
-#   # Train the PLDA model.
-#   $train_cmd $nnet_dir/xvectors_train/log/plda.log \
-# 	ivector-compute-plda ark:data/train/spk2utt \
-# 	"ark:ivector-subtract-global-mean scp:$nnet_dir/xvectors_train/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:-  ark:- |" \
-# 	$nnet_dir/xvectors_train/plda || exit 1;
-# fi
+  # Train the PLDA model.
+  $train_cmd $nnet_dir/xvectors_train/log/plda.log \
+	ivector-compute-plda ark:data/train/accent2utt \
+	"ark:ivector-subtract-global-mean scp:$nnet_dir/xvectors_train/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:-  ark:- |" \
+	$nnet_dir/xvectors_train/plda || exit 1;
+fi
 
-# if [ $stage -le 11 ]; then
-#   $train_cmd exp/scores/log/voxceleb1_test_scoring.log \
-# 	ivector-plda-scoring --normalize-length=true \
-# 	"ivector-copy-plda --smoothing=0.0 $nnet_dir/xvectors_train/plda - |" \
-# 	"ark:ivector-subtract-global-mean $nnet_dir/xvectors_train/mean.vec scp:$nnet_dir/xvectors_voxceleb1_test/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
-# 	"ark:ivector-subtract-global-mean $nnet_dir/xvectors_train/mean.vec scp:$nnet_dir/xvectors_voxceleb1_test/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
-# 	"cat '$voxceleb1_trials' | cut -d\  --fields=1,2 |" exp/scores_voxceleb1_test || exit 1;
-# fi
+if [ $stage -le 11 ]; then
+  $train_cmd exp/scores/log/test_scoring.log \
+	ivector-plda-scoring --normalize-length=true \
+	"ivector-copy-plda --smoothing=0.0 $nnet_dir/xvectors_train/plda - |" \
+	"ark:ivector-subtract-global-mean $nnet_dir/xvectors_train/mean.vec scp:$nnet_dir/xvectors_test/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
+	"ark:ivector-subtract-global-mean $nnet_dir/xvectors_train/mean.vec scp:$nnet_dir/xvectors_test/xvector.scp ark:- | transform-vec $nnet_dir/xvectors_train/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
+	"cat '$test_trials' | cut -d\  --fields=1,2 |" exp/scores_test || exit 1;
+fi
 
 # if [ $stage -le 12 ]; then
 #   eer=`compute-eer <(local/prepare_for_eer.py $voxceleb1_trials exp/scores_voxceleb1_test) 2> /dev/null`
