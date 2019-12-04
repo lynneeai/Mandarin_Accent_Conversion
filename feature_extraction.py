@@ -4,10 +4,6 @@ import pickle
 import h5py
 import random
 import multiprocessing as mp
-import soundfile as sf
-import pyworld as pw
-import numpy as np
-from tqdm import tqdm
 
 SR = 16000
 FFT_SIZE = 256
@@ -134,7 +130,7 @@ if __name__ == "__main__":
 	extract_data(f'{PARTITION_FILE_ROOT}/class_test.txt', 'class_test')
 
 	extract_data(f'{PARTITION_FILE_ROOT}/enc_train.txt', 'enc_train')
-	# extract_data(f'{PARTITION_FILE_ROOT}/enc_dev.txt', 'enc_dev')
+	extract_data(f'{PARTITION_FILE_ROOT}/enc_dev.txt', 'enc_dev')
 	extract_data(f'{PARTITION_FILE_ROOT}/enc_test.txt', 'enc_test')
 
 	extract_data(f'{PARTITION_FILE_ROOT}/class_train_aug_complete.txt', 'class_train_aug')
