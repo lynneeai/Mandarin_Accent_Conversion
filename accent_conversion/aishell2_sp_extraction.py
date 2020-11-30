@@ -1,3 +1,6 @@
+# This file is created by Lin Ai (la2734@columbia)
+# author: Lin Ai (la2734)
+
 import os
 import librosa
 import pickle
@@ -11,8 +14,8 @@ from tqdm import tqdm
 SR = 16000
 FFT_SIZE = 256
 FRAME_PERIOD = 10
-DATA_ROOT = './data'
-PARTITION_FILE_ROOT = './aishell_2_partitions'
+DATA_ROOT = '../data'
+PARTITION_FILE_ROOT = '../aishell_2_partitions'
 PROCESS_NUM = 10
 BATCH_PERCENT = 0.05
 SUBSET_PERCENT = 0.2
@@ -47,9 +50,8 @@ def pw2wav(f0, sp, ap, sr=SR, fft_size=FFT_SIZE, frame_period=FRAME_PERIOD):
 
 def extract_one_line(line):
 	wav_file, label = line.split()
-	new_wav_file = wav_file[1:]
 	utt_id = wav_file.split('/')[-1][:-4]
-	f0, sp, ap = wav2pw(new_wav_file)
+	f0, sp, ap = wav2pw(wav_file)
 
 	return utt_id, f0, sp, ap, label
 

@@ -8,14 +8,14 @@ import matplotlib.pylab as plt
 from collections import defaultdict
 from tqdm import tqdm
 
-train_wavs = '../magicdata/metadata/train.scp'
-dev_wavs = '../magicdata/metadata/dev.scp'
-test_wavs = '../magicdata/metadata/test.scp'
-spkinfo = '../magicdata/metadata/SPKINFO.txt'
+train_wavs = '../../magicdata/metadata/train.scp'
+dev_wavs = '../../magicdata/metadata/dev.scp'
+test_wavs = '../../magicdata/metadata/test.scp'
+spkinfo = '../../magicdata/metadata/SPKINFO.txt'
 
-train_folder = '../magicdata/train/'
-dev_folder = '../magicdata/dev/'
-test_folder = '../magicdata/test/'
+train_folder = '../../magicdata/wav/train/'
+# dev_folder = '../../magicdata/wav/dev/'
+test_folder = '../../magicdata/wav/test/'
 
 spk_prov_dict = defaultdict()
 with open(spkinfo, 'r') as spkfile:
@@ -72,7 +72,7 @@ def time_prov_dist_plot(spk_time_dict, output_file):
 	for spk, time in spk_time_dict.items():
 		prov = spk_prov_dict[spk]
 		prov_time[prov] += time
-	prov_time = {k: v / 3600 for k, v in prov_time.items()}
+	prov_time = {k: round(v / 3600, 2) for k, v in prov_time.items()}
 	
 	sorted_prov_time = sorted(list(prov_time.items()), key=lambda x: x[1], reverse=True)
 
@@ -83,6 +83,7 @@ def time_prov_dist_plot(spk_time_dict, output_file):
 	ax.set_yticklabels(prov_df.Province)
 	for i, v in enumerate(prov_df['Time'].items()):        
 		ax.text(v[1] * 1.01, i, f'{v[1]}', color='m')
+	ax.set(xlim=(0, 150))
 	plt.tight_layout()
 	plt.savefig(output_file)
 	plt.close()
@@ -94,14 +95,14 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	if args.task == 'get_spk_prov_dist':
-		for batch_file in [train_wavs, dev_wavs, test_wavs]:
+		for batch_file in [train_wavs, test_wavs]:
 			batch_name = batch_file.split('/')[-1][:-4]
 			print(f'----Processing {batch_name} batch...----\n')
 			ids = get_batch_spk_ids(batch_file)
 			spk_prov_dist_plot(ids, f'spk_prov_{batch_name}.png')
 
 	if args.task == 'get_time_prov_dist':
-		for batch_file, batch_folder in [(train_wavs, train_folder), (dev_wavs, dev_folder), (test_wavs, test_folder)]:
+		for batch_file, batch_folder in [(train_wavs, train_folder), (test_wavs, test_folder)]:
 			batch_name = batch_file.split('/')[-1][:-4]
 			print(f'----Processing {batch_name} batch...----\n')
 			ids = get_batch_spk_ids(batch_file)
